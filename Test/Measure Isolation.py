@@ -3,7 +3,7 @@ from SetUp import Set_Up, SshInterface, Excel, Capture_Functions
 
 #Parameters
 freq = 3510e6
-Power = -40
+Power = -50
 Temp = 25
 SETUP_FPGA = False
 FPGA_Wait = 180
