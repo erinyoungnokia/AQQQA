@@ -65,13 +65,14 @@ class Set_Up:
             time.sleep(Timeout)
             activeFPGA.SSHClose()
 
-    def Made_Setup(self,Made):
+    def Made_Setup(self,Made,Board):
         activeMade = SshInterface('192.168.101.{}'.format(str(Made + 2)))
         activeMade.sshRead()
         time.sleep(2)
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\capture_ul', '/var/tmp/capture_ul')
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\MADE_SETUP.sh', '/var/tmp/MADE_SETUP.sh')
-        activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\FRMON_CREATE.sh', '/var/tmp/FRMON_CREATE.sh')
+        activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\FRMON_CREATE_C.sh', '/var/tmp/FRMON_CREATE_C.sh')
+        activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\FRMON_CREATE_DOD.sh', '/var/tmp/FRMON_CREATE_DOD.sh')
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\MADE_SHUTDOWN.sh', '/var/tmp/MADE_SHUTDOWN.sh')
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\FRMON_SHUTDOWN.sh', '/var/tmp/FRMON_SHUTDOWN.sh')
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\Palau_AGC.py', '/var/tmp/Palau_AGC.py')
@@ -83,8 +84,21 @@ class Set_Up:
         activeMade.sshWrite('sudo chmod +x *')
         activeMade.sshRead()
 
-        activeMade.sshWrite('sudo frmonShellClient 127.0.0.1 2000 ./FRMON_CREATE.sh')
+        if Board == True:
+            activeMade.sshWrite('sudo frmonShellClient 127.0.0.1 2000 ./FRMON_CREATE_C.sh')
+            activeMade.sshRead()
+        else:
+            activeMade.sshWrite('sudo frmonShellClient 127.0.0.1 2000 ./FRMON_CREATE_DOD.sh')
+            activeMade.sshRead()
+        time.sleep(8)
+        activeMade.sshWrite('sudo -u root -i')
         activeMade.sshRead()
+
+        activeMade.sshWrite('cd /var/tmp/\n')
+        activeMade.sshRead()
+
+
+
 
         return activeMade
 
@@ -149,8 +163,8 @@ class Set_Up:
 
 
     def Set_SigGen_IIP3(self,Power,dist,cen_freq):
-        C1 = 4.95
-        C2 = 5.44
+        C1 = 4.5
+        C2 = 4.5
         MXA = Agilent_SigGen_MXA()
         PSG = Agilent_SigGen_PSG()
         MXA.setPowerdBm(Power+C1)

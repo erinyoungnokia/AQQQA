@@ -1,6 +1,14 @@
 import time
 from SetUp import Set_Up, SshInterface, Excel, Capture_Functions
 
+
+C_Band = True
+
+if C_Band == True:
+    cen_freq = 3840e6
+else:
+    cen_freq = 3500e6
+
 #Parameters
 freq = 3510e6
 Power = -40
@@ -9,14 +17,14 @@ SETUP_FPGA = False
 FPGA_Wait = 180
 IIP3 = False
 Antenna = True
-cen_freq = 3500e6
+
 num = 1
 data_set = []
 
 #Test Cases
-Made = [8]
+Made = [11,10,9,8]
 Cap_Point = [50,52,54,56]
-ISO_LIST = [8,9,10,12,13,14,15]
+ISO_LIST = [8,9,10,11,12,13,14,15]
 
 #EXCEL File
 excel_file_name = 'ISO_Measurements_X11.xlsx'
@@ -29,7 +37,7 @@ Offset = Set.CableOffset(Antenna)
 Set.FPGA_Setup(SETUP_FPGA,FPGA_Wait)
 Cap = Capture_Functions.Captures()
 for x in range(0, len(Made)):
-    activeMade = Set.Made_Setup(Made[x])
+    activeMade = Set.Made_Setup(Made[x],C_Band)
     for y in range(0, len(Cap_Point)):
         Set.Set_Switch(x, y, Cap_Point)
         Set.Set_SigGen(x, y, Cap_Point, Power + Offset[(4 * x) + (y)], freq)

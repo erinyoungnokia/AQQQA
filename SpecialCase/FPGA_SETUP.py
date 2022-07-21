@@ -3,7 +3,7 @@ from SetUp import Set_Up, SshInterface, Excel, Capture_Functions
 import matplotlib.pyplot as plt
 
 SETUP_FPGA = True
-FPGA_Wait = 660
+FPGA_Wait = 150
 
 Set = Set_Up.Set_Up()
 Set.FPGA_Setup(SETUP_FPGA,FPGA_Wait)

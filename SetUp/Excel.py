@@ -374,34 +374,31 @@ class Excel:
 
 
         if pipe == 50:
-            ws["C{}".format(str(row))] = power
-            ws["D{}".format(str(row))] = Gain[2]  # measured power
-            ws["E{}".format(str(row))] = ATT
-            ws["G{}".format(str(row))] = PowValue
-            ws["I{}".format(str(row))] = Gain[3]
-            ws["I{}".format(str(row))] = Gain[4]
+            ws["C{}".format(str(row))] = power #pin
+            ws["G{}".format(str(row))] = Gain[2]  # measured power
+            ws["H{}".format(str(row))] = Gain[5]  # measured power time
+            ws["I{}".format(str(row))] = ATT
+            ws["J{}".format(str(row))] = PowValue #pin palau meas
+
 
         elif pipe == 52:
-            ws["M{}".format(str(row))] = power
-            ws["N{}".format(str(row))] = Gain[2]  # measured power
-            ws["O{}".format(str(row))] = ATT
-            ws["Q{}".format(str(row))] = PowValue
-            ws["S{}".format(str(row))] = Gain[3]
-            ws["T{}".format(str(row))] = Gain[4]
+            ws["C{}".format(str(row))] = power  # pin
+            ws["G{}".format(str(row))] = Gain[2]  # measured power
+            ws["H{}".format(str(row))] = Gain[5]  # measured power time
+            ws["I{}".format(str(row))] = ATT
+            ws["J{}".format(str(row))] = PowValue  # pin palau meas
         elif pipe == 54:
-            ws["W{}".format(str(row))] = power
-            ws["X{}".format(str(row))] = Gain[2]  # measured power
-            ws["Y{}".format(str(row))] = ATT
-            ws["AA{}".format(str(row))] = PowValue
-            ws["AC{}".format(str(row))] = Gain[3]
-            ws["AD{}".format(str(row))] = Gain[4]
+            ws["C{}".format(str(row))] = power  # pin
+            ws["G{}".format(str(row))] = Gain[2]  # measured power
+            ws["H{}".format(str(row))] = Gain[5]  # measured power time
+            ws["I{}".format(str(row))] = ATT
+            ws["J{}".format(str(row))] = PowValue  # pin palau meas
         elif pipe == 56:
-            ws["AG{}".format(str(row))] = power
-            ws["AH{}".format(str(row))] = Gain[2]  # measured power
-            ws["AI{}".format(str(row))] = ATT
-            ws["AK{}".format(str(row))] = PowValue
-            ws["AM{}".format(str(row))] = Gain[3]
-            ws["AN{}".format(str(row))] = Gain[4]
+            ws["C{}".format(str(row))] = power  # pin
+            ws["G{}".format(str(row))] = Gain[2]  # measured power
+            ws["H{}".format(str(row))] = Gain[5]  # measured power time
+            ws["I{}".format(str(row))] = ATT
+            ws["J{}".format(str(row))] = PowValue  # pin palau meas
 
 
 

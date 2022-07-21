@@ -4,16 +4,25 @@ Made = [15]
 Cap_Point = [56]
 x = 0
 y = 0
+
 Power = -60
 Antenna = False
-freq = 3505e6
+freq = 3845e6
 dist = 5e6
 
 Set = Set_Up.Set_Up()
 Offset = Set.CableOffset(Antenna)
+while(True):
 #Set.Set_SigGen_IIP3(Power + Offset[(4 * x) + (y)],dist,freq)
-print("Power ={}".format(str(Power)))
-print('Offset = {}'.format(str(Offset[(4 * x) + (y)])))
-print('Output = {}'.format(Power + Offset[(4 * x) + (y)]) )
+    cc = input()
+    cc = float(cc)
+    if int(cc) == 1:
+        Power = Power + .5
+    else:
+        Power = Power - .5
 
-Set.Set_SigGen(x,y,Cap_Point,Power + Offset[(4 * x) + (y)],freq)
+    print("Power ={}".format(str(Power)))
+    print('Offset = {}'.format(str(1.44)))
+
+
+    Set.Set_SigGen(x,y,Cap_Point,Power+1.44,freq)

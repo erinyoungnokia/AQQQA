@@ -440,7 +440,7 @@ class Captures:
                        freq)
 
     def Cap(self,x,y,Cap_Point,Made,activeMade,Set,cap_file_path,cen_freq):
-        file_name = 'Made{}_{}_-60.txt'.format(str(Made[x]),str(Cap_Point[y]))
+        file_name = 'Made{}_{}_-23_manual.txt'.format(str(Made[x]),str(Cap_Point[y]))
         activeMade.sshWrite('sudo ./capture_ul -a {} -l 262144 /var/tmp/{}'.format(str(Cap_Point[y]), file_name))
         activeMade.sshRead()
         q = 0
@@ -519,8 +519,8 @@ class Captures:
         Ppow = activeMade.sshRead()
         PowPos = Ppow.find('RX Power:')
         print('position is for POW' + str(PowPos))
-        ATTvalue = ATT[ATTpos:ATTpos+15]
-        PowValue = Ppow[PowPos:PowPos + 16]
+        ATTvalue = ATT[ATTpos+6:ATTpos+15]
+        PowValue = Ppow[PowPos+10:PowPos + 16]
         print(ATTvalue)
         for q in range(0,10):
             try:

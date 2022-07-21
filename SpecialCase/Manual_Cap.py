@@ -2,14 +2,20 @@ import time
 from SetUp import Set_Up, SshInterface, Excel, Capture_Functions
 import matplotlib.pyplot as plt
 
+C_Band = True
+
+if C_Band == True:
+    cen_freq = 3840e6
+else:
+    cen_freq = 3500e6
 #Parameters
-freq = 3510e6
+freq = 3850e6
 Temp = 25
 SETUP_FPGA = True
 FPGA_Wait = 120
 IIP3 = False
 Antenna = False
-cen_freq = 3500e6
+
 num = 1
 data_set = []
 Power = -60
@@ -29,7 +35,7 @@ cap_file_path = 'C:\\Users\\eryoung\\Desktop\\Captures\\SC\\'
 
 for x in range(0, len(Made)):
 
-    activeMade = Set.Made_Setup(Made[x])
+    activeMade = Set.Made_Setup(Made[x],C_Band)
 
     for y in range(0, len(Cap_Point)):
         #Set.Set_Switch(x,y,Cap_Point)

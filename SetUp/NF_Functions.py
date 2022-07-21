@@ -12,6 +12,10 @@ import math
 from mpldatacursor import datacursor
 import os
 import paramiko
+from numpy import fft
+from numpy.fft import fftshift
+from scipy import signal
+from scipy.fftpack import fft, fftshift
 from scp import SCPClient
 import ctypes as ctp
 
@@ -38,10 +42,12 @@ class NF:
        Conv_dBm = -10  # 0 dBFS power in dBm (before the input match at balun output).
        cen_freq = freq
        spec_av = {}
-
+       count = 0
+       power_amp = 0
        for l in range(0,len(data_set)):
 
            capture_file = open(r"C:\Users\eryoung\Desktop\Captures\NF Measurements\{}".format(data_set[l]), "r")
+           #Muhammad
            c_file = capture_file.readlines()
            capture_file.close()
            samp_length = len(c_file)
@@ -69,6 +75,8 @@ class NF:
            data_i = data_i / 256
            data_q = data_q / 256
 
+
+
            Wavg = np.mean(sp.signal.windows.flattop(samp_length))
            data_complex = [complex(data_i[i], data_q[i]) for i in range(0, samp_length)]
            data_complex_w = data_complex * sp.signal.windows.flattop(samp_length)
@@ -83,7 +91,56 @@ class NF:
            #print('ADC Input Power (dBm), time domain = ', Pow_dBm_t_in)
            # spec = np.fft.fftshift(np
            # .fft.fft(data_complex))
+
+           #Sushanth
+           lines = c_file
+           captureLength = samp_length
+           dataQ = np.zeros(captureLength)
+           dataI = np.zeros(captureLength)
+           dataQ_FP = np.zeros(captureLength)
+           dataI_FP = np.zeros(captureLength)
+           indx = 0
+           for line in lines:
+               # print("line: %s" %(line))
+               # temp = line
+               line = line.rstrip().lstrip()
+               line = line[2:-4]
+
+               Istr = line[:6]
+               # print("I: %s" %(Istr))
+               Qstr = line[6:]
+               # print("IQ: %s I: %s Q: %s" %(temp,Istr,Qstr))
+
+               dataI[indx] = int(Istr, 16)
+
+               dataQ[indx] = int(Qstr, 16)
+
+               dataI_FP[indx] = self.convert2FixedPoint(Istr)
+               dataQ_FP[indx] = self.convert2FixedPoint(Qstr)
+
+               indx += 1
+           # convert from 2's comp to signed int.  (uses NUMPY)
+
+           dataI[dataI > pow(2, 19 - 1)] -= pow(2, 19)
+           dataI = dataI.astype(int)
+
+           dataQ[dataQ > pow(2, 19 - 1)] -= pow(2, 19)
+           dataQ = dataQ.astype(int)
+           d_complex = (dataI_FP + 1j * dataQ_FP)
+           Wavg_s = np.mean(signal.flattop(samp_length))
+           window = signal.flattop(samp_length)
+           data_windowed = data_complex * window / Wavg
+           data_windowed_fft = fftshift(fft(d_complex))
+
            spec = np.fft.fftshift(np.fft.fft(data_complex))
+
+
+
+           Vp = .2
+           voltage_amp = abs(data_windowed_fft/samp_length)
+           power_amp = power_amp + ((voltage_amp * (Vp) / (2 ** (0.5))) ** 2) / 50
+           count = count + 1
+
 
 
            spec_dBm = 10 * np.log10(abs(spec ** 2 / pow_scale)) + Conv_dBm
@@ -91,6 +148,10 @@ class NF:
            spec_av['spec{}'.format(l)] = (10 ** (spec_dBm/10))/1000
 
            sl = len(spec_dBm)
+
+       Pavg = power_amp/count
+
+       power_dbm = 10 * np.log10(Pavg * 1000)
 
 
 
@@ -118,6 +179,8 @@ class NF:
        spec_x = np.array(data_spec)
        #f = np.linspace(cen_freq + (-BW / 2), cen_freq + (BW / 2), len(spec_dBm))
        spec_dBml = np.ndarray.tolist(spec_x)
+       f = np.linspace(cen_freq + (-sample_rate / 2), cen_freq + (sample_rate / 2), len(spec_dBm))
+       power_dbm = 10 * np.log10(Pavg * 1000)
 
 
 
@@ -140,16 +203,31 @@ class NF:
        # spec_dBm = 10.0*(math.fabs(spec / pow_scale * spec)) + Conv_dBm
        Peak_pow = max(spec_dBm)
        Peak_pow_in = Peak_pow - adc_gain + dec_fil
-
-       f = np.linspace(cen_freq + (-sample_rate / 2), cen_freq + (sample_rate / 2), len(spec_dBm))
-       points = int(len(spec_dBm))
-       f_apart = sample_rate / points
-       sum = 0
+       f = np.linspace(cen_freq + (-sample_rate / 2), cen_freq + (sample_rate / 2), len(Pavg))
+       result = np.where((f >= freq - BW / 2) & (f <= freq + BW / 2))
        fmn = cen_freq - BW / 2
        fmx = cen_freq + BW / 2
-
-       p1 = int((fmn - f[0])/f_apart)
+       points = int(len(spec_dBm))
+       f_apart = sample_rate / points
+       p1 = int((fmn - f[0]) / f_apart)
        p2 = int((fmx - f[0]) / f_apart)
+
+       power_BW = np.sum(Pavg[result])
+       print('Power BW sum = {}'.format(str(power_BW)))
+       power_BW_dBm = 10 * np.log10(power_BW * 1000)
+       print('Power BW sum dBm = {}'.format(str(power_BW_dBm)))
+       #power_dbm = 10 * np.log10(Pavg * 1000)
+       psum = 0
+       for xx in range(p1, p2):
+           psum = psum + Pavg[xx]
+       print('Psum = {}'.format(str(psum)))
+       print('Psum dbm= {}'.format(str(10 * math.log10(psum * 1000))))
+
+
+
+
+       sum = 0
+
        p_cent = int((cen_freq-f[0])/f_apart)
        p_cen = spec_sum[p_cent]
        p_cen_dbm = 10*math.log10(p_cen*1000)
@@ -214,5 +292,22 @@ class NF:
        print(file_path + 'Made{}_Pipe{}.png'.format(str(Made),str(Pipe)))
        plt.savefig(file_path + 'Made{}_Pipe{}.png'.format(str(Made),str(Pipe)))
        return Gain, log_sum, therm, F
+
+    def convert2FixedPoint(self,hexStr):
+        #fixed point format
+
+        Istr1 = "B20001"
+        res = format(int(hexStr, 16), '0>24b')
+        sign = int(res[0]) * (-1 ) * (2**5)  # sign
+        integer = int(res[1:6], 2)  # integer
+        frac = 0
+        for i in range(6, 24):
+            frac = frac + (int(res[i], 2) * (2 ** (5 - i)))
+        # print(frac)
+        num = sign + (integer + frac)
+        # print(num)
+
+
+        return num
 
 

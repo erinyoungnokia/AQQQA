@@ -19,7 +19,7 @@ class Get_dBm_Meas:
         self.sample_rate = 245.76e6
         self.dec_fil = 0.0  # decimation filter loss (/6 decimation filter);
         self.adc_bits = 19  # ADC is 14 bits but ouput is mapped to 1.5.18 format
-        self.Conv_dBm = -10  # 0 dBFS power in dBm (before the input match at balun output).
+        self.Conv_dBm = -12  # 0 dBFS power in dBm (before the input match at balun output).
         self.cen_freq = 3840e6
 
 
@@ -60,6 +60,7 @@ class Get_dBm_Meas:
         data_i = data_i / 256
         data_q = data_q / 256
         Wavg = np.mean(sp.signal.windows.flattop(samp_length))
+        print('Wavg = {}'.format(str(Wavg)))
         data_complex = [complex(data_i[i], data_q[i]) for i in range(0, samp_length)]
         data_complex_w = data_complex * sp.signal.windows.flattop(samp_length)
         data_complex_w = data_complex_w / Wavg
@@ -70,8 +71,11 @@ class Get_dBm_Meas:
         pow_dBfs_t = 10 * math.log10(np.mean((abs(data_complex)) ** 2) / pow_fs)
         Pow_dBm_t = pow_dBfs_t + Conv_dBm
         Pow_dBm_t_in = Pow_dBm_t - adc_gain + dec_fil
+        print('Pow_dBm_t = {}'.format(str(Pow_dBm_t)))
+        print('Pow_dBm_t_in = {}'.format(str(Pow_dBm_t_in)))
 
         spec = np.fft.fftshift(np.fft.fft(data_complex_w))
+        #get voltages
         spec_dBm = 10 * np.log10(abs(spec ** 2 / pow_scale)) + Conv_dBm
 
         Peak_pow = max(spec_dBm)
@@ -79,8 +83,7 @@ class Get_dBm_Meas:
         f = np.linspace(cen_freq + (-sample_rate / 2), cen_freq + (sample_rate / 2), len(spec_dBm))
         spec_dBml = np.ndarray.tolist(spec_dBm)
         peak_ind = np.argmax(spec_dBml)
-        fmax = f[peak_ind] * 1e-6
-        pmax = spec_dBm[peak_ind]
+
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
@@ -108,14 +111,14 @@ class Get_dBm_Meas:
         print('data_q max  = {}'.format(str(max(data_i))))
 
 
-        return peak_ind,fmax,pmax,max(data_i),max(data_q)
+        return peak_ind,fmax,pmax,max(data_i),max(data_q), Pow_dBm_t_in
 
     def add_IP3_Meas(self, capture_file, dist, file_path, Made, Pipe):
         adc_gain = 0.0  # 0 dB gain
         sample_rate = 245.76e6
         dec_fil = 0.0  # decimation filter loss (/6 decimation filter);
         adc_bits = 19  # ADC is 14 bits but ouput is mapped to 1.5.18 format
-        Conv_dBm = -10  # 0 dBFS power in dBm (before the input match at balun output).
+        Conv_dBm = self.Conv_dBm  # 0 dBFS power in dBm (before the input match at balun output).
         cen_freq = 3840e6
         capture_file = open(capture_file, 'r')
         c_file = capture_file.readlines()

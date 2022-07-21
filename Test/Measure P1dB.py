@@ -2,6 +2,13 @@ import time
 from SetUp import Set_Up, SshInterface, Excel, Capture_Functions
 import matplotlib.pyplot as plt
 
+C_Band = True
+
+if C_Band == True:
+    cen_freq = 3840e6
+else:
+    cen_freq = 3500e6
+
 #Parameters
 freq = 3510e6
 Temp = 25
@@ -9,13 +16,13 @@ SETUP_FPGA = False
 FPGA_Wait = 600
 IIP3 = False
 Antenna = True
-cen_freq = 3500e6
+
 num = 1
 data_set = []
 
 #Test Cases
 Made = [11]
-Cap_Point = [50]
+Cap_Point = [50,52,54,56]
 
 #P1 Parameters
 
@@ -38,7 +45,7 @@ Cap = Capture_Functions.Captures()
 
 
 for x in range(0, len(Made)):
-    activeMade = Set.Made_Setup(Made[x])
+    activeMade = Set.Made_Setup(Made[x],C_Band)
 
     for y in range(0, len(Cap_Point)):
         Power = setPower

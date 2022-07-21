@@ -3,19 +3,26 @@ from SetUp import Set_Up, Excel, Capture_Functions
 
 
 
+C_Band = True
+
+if C_Band == True:
+    cen_freq = 3840e6
+else:
+    cen_freq = 3500e6
+
 #Parameters
-cen_freq = 3500e6
-freq = 3510e6
+
+freq = 3850e6
 Power = -60
 Temp = 25
 SETUP_FPGA = False
-FPGA_Wait = 630
+FPGA_Wait = 150
 IIP3 = False
-Antenna = True
+Antenna = False
 num_cap = 1
 
 #Test Cases
-Made = [12,13]
+Made = [1]
 Cap_Point = [50,52,54,56]
 
 
@@ -31,7 +38,7 @@ Offset = Set.CableOffset(Antenna)
 Set.FPGA_Setup(SETUP_FPGA,FPGA_Wait)
 
 for x in range(0, len(Made)):
-    activeMade = Set.Made_Setup(Made[x])
+    activeMade = Set.Made_Setup(Made[x], C_Band)
 
     for y in range(0, len(Cap_Point)):
         Set.Set_Switch(x,y,Cap_Point)
