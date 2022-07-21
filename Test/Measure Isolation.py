@@ -9,7 +9,7 @@ SETUP_FPGA = False
 FPGA_Wait = 180
 IIP3 = False
 Antenna = True
-cen_freq = 3500e6
+cen_freq= 3500e6
 num = 1
 data_set = []
 
