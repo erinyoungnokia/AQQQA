@@ -5,7 +5,7 @@ Cap_Point = [50]
 x = 0
 y = 0
 
-Power = -7
+Power = -18
 
 Increment = .5
 Antenna = False
@@ -20,7 +20,7 @@ Set = Set_Up.Set_Up()
 Cap = Capture_Functions.Captures()
 Offset = Set.CableOffset(Antenna)
 ESG = Set_Up.Agilent_SigGen_ESG()
-#activeMade = Set.Made_Setup(Made[x],C_Band)
+activeMade = Set.Made_Setup(Made[x],C_Band)
 cap_file_path = 'C:\\Users\\eryoung\\Desktop\\Captures\\SC\\'
 while(True):
 #Set.Set_SigGen_IIP3(Power + Offset[(4 * x) + (y)],dist,freq)
@@ -53,7 +53,7 @@ while(True):
         print("Exit")
         break
 
-    #Cap.Cap(x, y, Cap_Point, Made, activeMade, Set, cap_file_path, cen_freq)
+    Cap.Cap(x, y, Cap_Point, Made, activeMade, Set, cap_file_path, cen_freq)
 
 
 

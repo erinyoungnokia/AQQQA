@@ -19,7 +19,7 @@ class Get_dBm_Meas:
         self.sample_rate = 245.76e6
         self.dec_fil = 0.0  # decimation filter loss (/6 decimation filter);
         self.adc_bits = 19  # ADC is 14 bits but ouput is mapped to 1.5.18 format
-        self.Conv_dBm = -12  # 0 dBFS power in dBm (before the input match at balun output).
+        self.Conv_dBm = 0  # 0 dBFS power in dBm (before the input match at balun output).
         self.cen_freq = 3840e6
 
 

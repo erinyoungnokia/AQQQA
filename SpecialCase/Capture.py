@@ -17,11 +17,11 @@ IIP3 = False
 Antenna = False
 num = 1
 data_set = []
-Power = -60
+Power = 17
 
 #Test Cases
-Made = [1]
-Cap_Point = [52]
+Made = [0]
+Cap_Point = [50]
 
 #SetUP
 Set = Set_Up.Set_Up()
@@ -38,6 +38,6 @@ for x in range(0, len(Made)):
     for y in range(0, len(Cap_Point)):
         Set.Set_Switch(x,y,Cap_Point)
         #Set.Set_SigGen(x,y,Cap_Point,Power + Offset[(4 * x) + (y)],freq)
-        Set.Set_SigGen(x, y, Cap_Point, Power + 1.44, freq)
+        Set.Set_SigGen(x, y, Cap_Point, Power + 2.6, freq)
         Cap.Cap(x,y,Cap_Point,Made,activeMade,Set,cap_file_path,cen_freq)
     Set.Set_Made_Off(x,IIP3,activeMade)

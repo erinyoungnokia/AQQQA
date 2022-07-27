@@ -3,7 +3,7 @@ from SetUp import Keysight_PS
 Set = Keysight_PS.Keysight_PS()
 
 
-ON = True
+ON = False
 
 if ON == True:
     Set.turnOn()

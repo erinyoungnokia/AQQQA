@@ -488,9 +488,9 @@ class Captures:
 
 
 
-        activeMade.sshWrite('python3 Palau_Test_20220705.py -t RX_ATTget_{}'.format(str(channel)))
+        activeMade.sshWrite('python3 Palau_Test_20220705_MK7.py -t RX_ATTget_{}'.format(str(channel)))
         activeMade.sshRead()
-        time.sleep(2)
+        time.sleep(30)
         ATTlogic = True
 
         activeMade.sshWrite('sudo ./capture_ul -a {} -l 262144 /var/tmp/{}'.format(str(Cap_Point[y]), file_name))
@@ -500,7 +500,7 @@ class Captures:
         print('position is for ATT' +str(ATTpos))
         while ATTlogic == True:
             if str(ATTpos) == '-1':
-                activeMade.sshWrite('python3 Palau_Test_20220705.py -t RX_ATTget_{}'.format(str(channel)))
+                activeMade.sshWrite('python3 Palau_Test_20220705_MK7.py -t RX_ATTget_{}'.format(str(channel)))
                 activeMade.sshRead()
                 time.sleep(2)
                 activeMade.sshWrite(
@@ -512,10 +512,10 @@ class Captures:
             else:
                 ATTlogic = False
 
-        activeMade.sshWrite('python3 Palau_Test_20220705.py -t RX_POWER_{}'.format(str(channel)))
+        activeMade.sshWrite('python3 Palau_Test_20220705_MK7.py -t RX_POWER_{}'.format(str(channel)))
         activeMade.sshRead()
         time.sleep(2)
-        activeMade.sshWrite('python3 Palau_Test_20220705.py -t RX_POWER_{}'.format(str(channel)))
+        activeMade.sshWrite('python3 Palau_Test_20220705_MK7.py -t RX_POWER_{}'.format(str(channel)))
         Ppow = activeMade.sshRead()
         PowPos = Ppow.find('RX Power:')
         print('position is for POW' + str(PowPos))

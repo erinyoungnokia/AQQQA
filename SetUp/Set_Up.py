@@ -76,8 +76,8 @@ class Set_Up:
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\MADE_SHUTDOWN.sh', '/var/tmp/MADE_SHUTDOWN.sh')
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\FRMON_SHUTDOWN.sh', '/var/tmp/FRMON_SHUTDOWN.sh')
         activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\Palau_AGC.py', '/var/tmp/Palau_AGC.py')
-        activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\Palau_Test_20220705.py',
-                           '/var/tmp/Palau_Test_20220705.py')
+        activeMade.putFile('C:\\Users\\eryoung\\Desktop\\Captures\\Palau_Test_20220705_MK7.py',
+                           '/var/tmp/Palau_Test_20220705_MK7.py')
 
         activeMade.sshWrite('cd /var/tmp/\n')
         activeMade.sshRead()
@@ -93,7 +93,22 @@ class Set_Up:
         time.sleep(8)
         activeMade.sshWrite('sudo -u root -i')
         activeMade.sshRead()
-
+        activeMade.sshWrite('devmem 0xFC200110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC204110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC208110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC20C110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC210110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC214110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC218110 32 0x00001300')
+        activeMade.sshRead()
+        activeMade.sshWrite('devmem 0xFC21C110 32 0x00001300')
+        activeMade.sshRead()
         activeMade.sshWrite('cd /var/tmp/\n')
         activeMade.sshRead()
 
@@ -151,7 +166,7 @@ class Set_Up:
         if x == 3:
             Amp = Agilent_SigGen_MXA()
         else:
-            Amp = Agilent_SigGen_ESG()
+            Amp = Agilent_SigGen_PSG()
 
         Amp.turnOuputON()
         Amp.setPowerdBm(Power)
@@ -187,7 +202,8 @@ class Set_Up:
             if x == 3:
                 Amp = Agilent_SigGen_MXA()
             else:
-                Amp = Agilent_SigGen_ESG()
+                #Amp = Agilent_SigGen_ESG()
+                Amp = Agilent_SigGen_PSG()
 
             SW_path.openAll()
             Amp.turnOuputOFF()

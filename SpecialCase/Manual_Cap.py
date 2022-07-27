@@ -18,11 +18,11 @@ Antenna = False
 
 num = 1
 data_set = []
-Power = -60
+Power = 17
 made = True
 
 #Test Cases
-Made = [8]
+Made = [0]
 Cap_Point = [50]
 
 #SetUP

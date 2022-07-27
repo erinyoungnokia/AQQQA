@@ -10,7 +10,7 @@ if C_Band == True:
 else:
     cen_freq = 3500e6
 #Parameters
-freq = 3845e6
+freq = 3850e6
 Temp = 25
 SETUP_FPGA = False
 FPGA_Wait = 180
@@ -19,11 +19,11 @@ Antenna = False
 
 num = 1
 data_set = []
-Power = -52
+Power = 12
 startPow = Power
 
 #Test Cases
-Made = [1]
+Made = [0]
 Cap_Point = [50]
 
 #SetUP
@@ -38,7 +38,7 @@ cap_file_path = 'C:\\Users\\eryoung\\Desktop\\Captures\\SC\\'
 for x in range(0, len(Made)):
     activeMade = Set.Made_Setup(Made[x],C_Band)
     time.sleep(5)
-    activeMade.sshWrite('python3 Palau_Test_20220705.py -t AgcCfgSet')
+    activeMade.sshWrite('python3 Palau_Test_20220705_MK7.py -t AgcCfgSet')
 
     activeMade.sshRead()
     time.sleep(5)
@@ -52,10 +52,11 @@ for x in range(0, len(Made)):
         row = 2
         Set.Set_Switch(x, y, Cap_Point)
 
-        for z in range(0,15):
-            file_name = 'Made{}_{}_AGC_-{}dbmUP.txt'.format(str(Made[x]), str(Cap_Point[y]),str(Power))
+        for z in range(0,16):
+            file_name = 'Made{}_{}_AGC_{}dbmUP_MK7.txt'.format(str(Made[x]), str(Cap_Point[y]),str(Power))
             #Set.Set_SigGen(x, y, Cap_Point, Power + Offset[(4 * x) + (y)], freq)
-            Set.Set_SigGen(x, y, Cap_Point, Power + 1.44, freq)
+            Set.Set_SigGen(x, y, Cap_Point, Power+4.7, freq)
+            time.sleep(1)
             Cap.Cap_ATT(x,y,Cap_Point,Made,activeMade,Set,cap_file_path,cen_freq,file_name,excel_file_path,cap_file_path,Power,cap_file_path+file_name,row)
-            Power = Power + 1
+            Power = Power + .5
             row = row + 1
